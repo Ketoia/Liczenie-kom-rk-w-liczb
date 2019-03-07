@@ -1,0 +1,173 @@
+#include <iostream>
+#include <string>
+#include <windows.h>
+using namespace std;
+
+int **siup;
+void sprawdzanko(int mamamija, int i, int j, int max, int blin)
+{	
+	if (siup[i][j] == 1)
+	{
+		siup[i][j] = mamamija;
+		if (j != 0)
+		{
+			sprawdzanko(mamamija, i, j - 1, max, blin);
+		}
+		if (j != max)
+		{
+			sprawdzanko(mamamija, i, j + 1, max, blin);
+		}
+		if (i != 0)
+		{
+			sprawdzanko(mamamija, i - 1, j, max, blin);
+		}
+		if (i != blin - 1)
+		{
+			sprawdzanko(mamamija, i + 1, j, max, blin);
+		}
+	}
+}
+
+int main()
+{
+	for (;;)
+	{
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		cout << "dej liczbe: ";
+		string boom;
+		long long int liczba = 0;
+		int blin = 0, maka = 0, liczbaa;
+		cin >> boom;
+		string ciagg, ciag;
+
+		if (boom[0] == 'b')
+		{
+			boom = boom.erase(0,1);
+			for (int i = boom.length() - 1, g = 1; i >= 0 ; i--, g = g * 2)
+			{
+				if (boom[i] == '1')
+				{
+					liczba += g;
+				}
+			}
+		}
+		else
+		{
+			liczba = atoi(boom.c_str());
+		}
+		liczbaa = liczba;
+		while (liczba > 0)
+		{
+			if (liczba % 2 == 0)
+			{
+				liczba /= 2;
+				ciagg += "0";
+			}
+			else
+			{
+				liczba--;
+				liczba /= 2;
+				ciagg += "1";
+				blin++;
+			}
+		}
+		for (int i = ciagg.length(); i > 0; i--)
+		{
+			if (ciagg[i - 1] == '1')
+			{
+				ciag += '1';
+			}
+			else ciag += '0';
+		}
+		for (int i = 0; i < ciagg.length(); i++)
+		{
+			if (ciagg[i] = '1')
+			{
+				cout << endl;
+				maka = ciagg.length() - (i + 1);
+				break;
+			}
+		}
+		siup = new int *[blin];
+		for (int i = 0; i < blin; i++)
+		{
+			siup[i] = new int[ciag.length() + maka];
+			for (int j = 0; j < ciag.length() + maka; j++)
+			{
+				siup[i][j] = 0;
+			}
+		}
+		for (int i = 0, g = 0, fek = blin - 1; i < blin; i++, g++, fek--)
+		{
+			for (int j = g; j < ciag.length(); j++)
+			{
+				if (ciag[j] == '1')
+				{
+					g = j;
+					break;
+				}
+			}
+			for (int j = 0; j < ciag.length(); j++)
+			{
+				if (ciag[j] == '1') siup[fek][j + g] = 1;
+			}
+		}
+		/*for (int i = 0; i < blin; i++)
+		{
+			for (int j = 0; j < ciag.length() + maka; j++)
+			{
+				if (siup[i][j] == 1)
+				{
+					SetConsoleTextAttribute(hConsole, 225);
+
+					cout << "1 ";
+				}
+				else
+				{
+					SetConsoleTextAttribute(hConsole, 7);
+					cout << "0 ";
+				}
+			}
+			cout << endl;
+		}*/
+		cout << endl;
+		int  mamamija = 1;
+		for (int i = 0; i < blin; i++)
+		{
+			for (int j = ciag.length() + maka - 1; j >= 0; j--)
+			{
+				if (siup[i][j] == 1) mamamija++;
+				sprawdzanko(mamamija, i, j, ciag.length() + maka, blin);
+			}
+		}
+		for (int i = 0; i < blin; i++)
+		{
+			for (int j = 0; j < ciag.length() + maka; j++)
+			{
+				if (siup[i][j] == 0)
+				{
+					SetConsoleTextAttribute(hConsole, 0);
+
+					cout << "0 ";
+				}
+				else if (siup[i][j] <= 10)
+				{
+					SetConsoleTextAttribute(hConsole, 225);
+					cout << siup[i][j] - 1 << " ";
+				}
+				else
+				{
+					SetConsoleTextAttribute(hConsole, 225);
+					cout << siup[i][j] - 1;
+				}
+			}
+			SetConsoleTextAttribute(hConsole, 0);
+			cout << endl;
+		}
+		SetConsoleTextAttribute(hConsole, 7);
+		cout << endl;
+		cout << "bin: "<< ciag << " dec: " << liczbaa << "   " << mamamija - 1 << endl;
+		cout << endl;
+	}
+	return 0;
+}
